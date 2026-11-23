@@ -1,6 +1,6 @@
 {
   "name": "dsh-hindsight-bridge",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Native DeepSeek Harness pipeline memory with safe Hindsight recall and per-turn retention.",
   "type": "module",
   "main": "./lib/index.js",
@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "~4.0.4",
-    "@deepseek-ai/dsh-llm": "0.2.0-rc.2"
+    "@deepseek-ai/dsh-llm": ">=0.2.0-rc.2 <0.3.0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.4",
