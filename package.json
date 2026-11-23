@@ -1,6 +1,6 @@
 {
   "name": "dsh-hindsight-bridge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Native DeepSeek Harness pipeline memory with safe Hindsight recall and per-turn retention.",
   "type": "module",
   "main": "./lib/index.js",
@@ -69,10 +69,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/online111111/dsh-hindsight-bridge.git"
+    "url": "git+https://github.com/Observe-Life/dsh-hindsight-bridge.git"
   },
-  "homepage": "https://github.com/online111111/dsh-hindsight-bridge#readme",
+  "homepage": "https://github.com/Observe-Life/dsh-hindsight-bridge#readme",
   "bugs": {
-    "url": "https://github.com/online111111/dsh-hindsight-bridge/issues"
+    "url": "https://github.com/Observe-Life/dsh-hindsight-bridge/issues"
   }
 }

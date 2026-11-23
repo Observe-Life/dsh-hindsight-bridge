@@ -36,6 +36,16 @@ For a shared Hermes bank, explicitly select `hermes-default`. This grants this D
 
 The Web client companion provides a Hindsight settings section. Configuration changes use the current ConfigForms atomic mutation and revision mechanism. Conflicting writes preserve the draft; an explicit discard action reloads the current configuration rather than silently rebasing it. Secrets are redacted by the host schema and password inputs never echo the existing key.
 
+## Model-facing tools (1.1.0)
+
+Beyond the automatic pipeline, the plugin registers three tools on the host tools registry, so the agent can query the bank itself:
+
+- `hindsight_recall` — semantic search over the configured bank; returns a relevance-ranked bullet list, or an explicit "nothing found" note. Counts into the same stats the settings panel reports.
+- `hindsight_reflect` — full-bank synthesis for questions a ranked list cannot answer (seconds to tens of seconds; it is a real model call).
+- `hindsight_status` — current config shape plus recall/retain counters; never carries the API key.
+
+Every `execute` re-snapshots the config at call time, so live settings edits apply to the next tool call without a reload. Registration is skipped silently in compositions without a tools service.
+
 ## Behavior
 
 - Recall runs once before the first model request of each turn, using genuine user text. A bounded, explicitly labelled memory block enters durable user-role history. Tool continuations reuse it rather than recalling repeatedly.
@@ -43,7 +53,7 @@ The Web client companion provides a Hindsight settings section. Configuration ch
 - Each turn has a stable, distinct document ID. Hindsight replacement semantics cannot erase earlier turns.
 - Retention is non-blocking. An accepted asynchronous operation is polled until completion; acceptance is not reported as completion. `session/flush` and plugin disposal drain pending writes within a deadline.
 - Queue overflow and failed writes are logged using non-sensitive error codes. No POST is automatically retried. Forced process exit, server outage, and bounded flush expiry can still lose unsent work; this is not a durable offline journal.
-- HTTP redirects are refused. HTTPS is required except for loopback HTTP. Request and response deadlines, byte limits, and cancellation bound service failures.
+- HTTP redirects are refused. HTTPS is required except for loopback HTTP, and for non-loopback HTTP only when `allowHttp` is explicitly enabled (needed for container-network addresses such as `http://hindsight:8888`). Request and response deadlines, byte limits, and cancellation bound service failures.
 - `redactSecrets` is enabled by default and removes common key/token/password/private-key patterns. It is best-effort, not a guarantee that arbitrary sensitive natural-language content is detected.
 - Child sessions are excluded by default. Turn this on deliberately if their synthetic content belongs in your memory bank.
 
@@ -58,7 +68,7 @@ Memory increases model input by up to `maxBlockChars` characters per turn. It is
 Run these commands in a clone of this source repository, not inside the installed tarball. The tarball intentionally excludes test fixtures.
 
 ```sh
-git clone https://github.com/online111111/dsh-hindsight-bridge.git
+git clone https://github.com/Observe-Life/dsh-hindsight-bridge.git
 cd dsh-hindsight-bridge
 npm ci
 npm test
