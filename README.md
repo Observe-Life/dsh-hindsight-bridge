@@ -36,10 +36,11 @@ For a shared Hermes bank, explicitly select `hermes-default`. This grants this D
 
 The Web client companion provides a Hindsight settings section. Configuration changes use the current ConfigForms atomic mutation and revision mechanism. Conflicting writes preserve the draft; an explicit discard action reloads the current configuration rather than silently rebasing it. Secrets are redacted by the host schema and password inputs never echo the existing key.
 
-## Model-facing tools (1.1.0)
+## Model-facing tools (1.1.0, retain in 1.1.2)
 
-Beyond the automatic pipeline, the plugin registers three tools on the host tools registry, so the agent can query the bank itself:
+Beyond the automatic pipeline, the plugin registers four tools on the host tools registry, so the agent can query the bank itself and store durable facts on demand:
 
+- `hindsight_retain` — model-initiated write (1.1.2): submits one fact asynchronously (content + optional one-line `context`, comma-separated extra `tags`, optional ISO-8601 `occurred_at`), replies "queued" at once like the Hermes provider's tool, and tracks the extraction in the background so the shared stats stay truthful. Content passes the same redaction as every other channel; the tool never throws — failures come back as text.
 - `hindsight_recall` — semantic search over the configured bank; returns a relevance-ranked bullet list, or an explicit "nothing found" note. Counts into the same stats the settings panel reports.
 - `hindsight_reflect` — full-bank synthesis for questions a ranked list cannot answer (seconds to tens of seconds; it is a real model call).
 - `hindsight_status` — current config shape plus recall/retain counters; never carries the API key.
